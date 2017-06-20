@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.dao.RecipebasicDao">
+	
+	<!-- 倒序查询10个数据 -->
+	<select id="selectList" resultType="io.renren.entity.RecipebasicEntity">
+		select * from recipebasic order by id desc LIMIT 0,9
+	</select>
+	
+	<!-- 查询所有 -->
+	<select id="findAll" resultType="io.renren.entity.RecipebasicEntity">
+		select * from recipebasic 
+	</select>
+	
+	<!-- 随机查询10条数据-->
+	<select id="findByRand" resultType="io.renren.entity.RecipebasicEntity">
+		SELECT * FROM recipebasic ORDER BY  RAND() LIMIT 10
+	</select>
+	
+	<!-- 随机查询1条数据-->
+	<select id="findOneRecipe" resultType="io.renren.entity.RecipebasicEntity">
+		SELECT * FROM recipebasic ORDER BY  RAND() LIMIT 1
+	</select>
+	
+	<!-- 随机查询5条数据-->
+	<select id="findByNumber" resultType="io.renren.entity.RecipebasicEntity">
+		SELECT * FROM recipebasic ORDER BY  RAND() LIMIT 5
+	</select>
+	
+	<!-- 根据名字查询 -->
+	<select id="findRecipebyName" resultType="io.renren.entity.RecipebasicEntity">
+		select * from recipebasic where foodName = #{foodname}
+	</select>
+	
+	<!-- 根据用户名查询 -->
+	<select id="findByCustomerNamestring" resultType="io.renren.entity.RecipebasicEntity">
+		select * from recipebasic where provider = #{string}
+	</select>
+	
+	<!-- 根据名字查询 -->
+	<select id="findName" resultType="io.renren.entity.RecipebasicEntity">
+		select * from recipebasic where foodName = #{foodname}
+	</select>
+	
+	
+	<!-- 分页查询 -->
+	<select id="findByPage" resultType="io.renren.entity.RecipebasicEntity">
+		select * from recipebasic 
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	<!-- 搜索 -->
+	<select id="searchBySome" resultType="io.renren.entity.RecipebasicEntity">
+		select * from recipebasic where foodName = #{value}
+		
+	</select>
+	
+	<!-- 模糊搜索+分页 -->
+	<!-- <select id="queryList" resultType="io.renren.entity.ScheduleJobEntity" >
+		select * from schedule_job
+		<where>
+			<if test="beanName != null and beanName.trim() != ''">
+				bean_name like concat('%', #{beanName}, '%') 
+			</if>
+		</where>
+		<if test="offset != null and limit != null ">
+		limit #{offset}, #{limit}
+		</if>
+	</select> -->
+	
+	<select id="queryObject" resultType="io.renren.entity.RecipebasicEntity">
+		select * from recipebasic where id = #{value}
+	</select>
+
+	<select id="queryList" resultType="io.renren.entity.RecipebasicEntity">
+		select * from recipebasic 
+		<if test="offset != null and limit != null">
+			 limit #{offset}, #{limit}	
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from recipebasic 
+	</select>
+	 
+	<insert id="save" parameterType="io.renren.entity.RecipebasicEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into recipebasic
+		(
+			`foodName`, 
+			`preparationTime`, 
+			`theDefficulty`, 
+			`shareNumber`, 
+			`provider`, 
+			`introduce`,
+			`makingTime`,
+			`imgFilePath`,
+			`recipeType`
+			
+		)
+		values
+		(
+			#{foodname}, 
+			#{preparationtime}, 
+			#{thedefficulty}, 
+			#{sharenumber}, 
+			#{provider}, 
+			#{introduce},
+			#{makingtime},
+			#{imgfilepath},
+			#{recipeType}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="io.renren.entity.RecipebasicEntity">
+		update recipebasic 
+		<set>
+			<if test="foodname != null">`foodName` = #{foodname}, </if>
+			<if test="preparationtime != null">`preparationTime` = #{preparationtime}, </if>
+			<if test="thedefficulty != null">`theDefficulty` = #{thedefficulty}, </if>
+			<if test="sharenumber != null">`shareNumber` = #{sharenumber}, </if>
+			<if test="provider != null">`provider` = #{provider}, </if>
+			<if test="introduce != null">`introduce` = #{introduce}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from recipebasic where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from recipebasic where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

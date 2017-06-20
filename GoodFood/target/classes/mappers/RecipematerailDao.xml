@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.dao.RecipematerailDao">
+
+	<select id="queryObject" resultType="io.renren.entity.RecipematerailEntity">
+		select * from recipematerail where id = #{value}
+	</select>
+	
+	
+	<!-- 查所有 -->
+	<select id="findAll" resultType="io.renren.entity.RecipematerailEntity">
+		select * from recipematerail
+	</select>
+	
+	<!-- 根据名字查询 -->
+	<select id="findRecipebyNameList" resultType="io.renren.entity.RecipematerailEntity">
+		select * from recipematerail where foodName = #{foodname}
+	</select>
+	
+	<select id="queryList" resultType="io.renren.entity.RecipematerailEntity">
+		select * from recipematerail 
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from recipematerail 
+	</select>
+	 
+	<insert id="save" parameterType="io.renren.entity.RecipematerailEntity" useGeneratedKeys="true" >
+		insert into recipematerail
+		(
+			`materailName`, 
+			`meterailNumber`, 
+			`foodName`
+		)
+		values
+		(
+			#{materailname}, 
+			#{meterailnumber}, 
+			#{foodname}
+		)
+	</insert>
+	 
+	 <!-- 批量增加 -->
+	<insert id="saveBatch" parameterType="io.renren.entity.RecipematerailEntity" useGeneratedKeys="true" >
+		insert into recipematerail
+		(
+			`materailName`, 
+			`meterailNumber`, 
+			`foodName`
+		)
+		values
+		<foreach item="it" collection="list" index="index" separator="," >
+			(
+			#{it.materailname}, 
+			#{it.meterailnumber}, 
+			#{it.foodname}
+			)
+		</foreach>
+		
+	</insert>
+	
+	
+	<update id="update" parameterType="io.renren.entity.RecipematerailEntity">
+		update recipematerail 
+		<set>
+			<if test="materailname != null">`materailName` = #{materailname}, </if>
+			<if test="meterailnumber != null">`meterailNumber` = #{meterailnumber}, </if>
+			<if test="foodname != null">`foodName` = #{foodname}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from recipematerail where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from recipematerail where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

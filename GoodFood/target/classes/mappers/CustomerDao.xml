@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.dao.CustomerDao">
+
+	<resultMap type="io.renren.entity.CustomerEntity" id="CustomerResult">
+		<id property="id" column="id"/>
+		<result property="customerName" column="customer_name"/>
+		<result property="customerPassword" column="customer_password"/>
+		<result property="customweEmail" column="customwe_email"/>
+		<result property="headimg" column="head_img"/>
+		<result property="nickname" column="nick_name"/>	
+		<result property="likerecipe" column="like_recipe"/>
+		<result property="likekitchenware" column="like_kitchen_ware"/>
+		<result property="likeseasoning" column="like_seasoning" />
+		<result property="status" column="status" javaType="Integer"/>
+	</resultMap>
+
+	<select id="queryObject" resultMap="CustomerResult">
+		select * from customer where id = #{value}
+	</select>
+	
+	<!-- 查询所有 -->
+	<select id="findAll" resultMap="CustomerResult">
+		select * from customer 
+	</select>
+	
+	<!-- 登录 -->
+	<select id="login" resultMap="CustomerResult">
+		select * from customer where customer_name = #{customerName} and customer_password = #{customerPassword}
+	</select>
+	
+	<!-- 修改密码验证 -->
+	<select id="findByPassAndEmail" resultMap="CustomerResult">
+		select * from customer where customwe_email = #{customweEmail} and customer_password = #{customerPassword}
+	</select>
+
+	<select id="queryList" resultMap="CustomerResult">
+		select * from customer 
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from customer 
+	</select>
+	
+	
+	<!-- 注册 -->
+	<insert id="regist" parameterType="map" useGeneratedKeys="true" keyProperty="id">
+		insert into customer
+		(
+			`customer_name`, 
+			`customer_password`, 
+			`customwe_email`
+	
+		)
+		values
+		(
+			#{customerName}, 
+			#{customerPassword}, 
+			#{customweEmail}
+			
+		)
+	</insert>
+	
+	<!-- 注册 -->
+	<insert id="regists" parameterType="map" useGeneratedKeys="true" keyProperty="id">
+		insert into customer
+		(
+			`customer_name`, 
+			`customer_password`, 
+			`customwe_email`
+	
+		)
+		values
+		(
+			#{customerName}, 
+			#{customerPassword}, 
+			#{customweEmail}
+			
+		)
+	</insert>
+	
+	
+	 <!-- 注册 -->
+	<insert id="save" parameterType="io.renren.entity.CustomerEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into customer
+		(
+			`customer_name`, 
+			`customer_password`, 
+			`customwe_email`,
+			`head_img`, 
+			`nick_name`, 
+			`like_recipe`, 
+			`like_kitchen_ware`, 
+			`like_seasoning`, 
+			`status`
+			
+		)
+		values
+		(
+			#{customerName}, 
+			#{customerPassword}, 
+			#{customweEmail},
+			#{headimg},
+			#{nickname},
+			#{likerecipe},
+			#{likekitchenware},
+			#{likeseasoning},
+			#{status}
+		)
+	</insert>
+	<!-- 注册验证 -->
+	<select id="findByName" parameterType="io.renren.entity.CustomerEntity" resultMap="CustomerResult" >
+		select * from customer where customer_name = #{customerName}
+	</select>
+	
+	<!-- 通过用户名查询用户信息 -->
+	<select id="findToCustName" resultMap="CustomerResult">
+		select * from customer where customer_name = #{customerName}
+	</select>
+	
+	
+	
+	 
+	<update id="update" parameterType="io.renren.entity.CustomerEntity">
+		update customer 
+		<set>
+			<if test="customerName != null">`customer_name` = #{customerName}, </if>
+			<if test="customerPassword != null">`customer_password` = #{customerPassword}, </if>
+			<if test="customweEmail != null">`customwe_email` = #{customweEmail},</if>
+			<if test="headimg != null">`head_img` = #{headimg},</if>
+			<if test="nickname != null">`nick_name` = #{nickname},</if>
+			<if test="likerecipe != null">`like_recipe` = #{likerecipe},</if>
+			<if test="likekitchenware != null">`like_kitchen_ware` = #{likekitchenware},</if>
+			<if test="likeseasoning != null">`like_seasoning` = #{likeseasoning},</if>
+			<if test="status != null">`status` = #{status}</if>
+			
+		</set>
+		where customer_name = #{customerName}
+	</update>
+	
+	
+	<update id="updateOne" parameterType="map">
+		update customer 
+		<set>	
+			<if test="nickname != null">`nick_name` = #{nickname}</if>
+
+		</set>
+		where customer_name = #{customerName}
+	</update>
+	
+	
+	<delete id="delete">
+		delete from customer where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from customer where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

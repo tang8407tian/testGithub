@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.dao.CommentDao">
+
+	<select id="queryObject" resultType="io.renren.entity.CommentEntity">
+		select * from comment where id = #{value}
+	</select>
+	
+	<!--查询所有  -->
+	<select id="findAll" resultType="io.renren.entity.CommentEntity">
+		select * from comment 
+	</select>
+
+	<!--查询时间  -->
+	<select id="findTime" resultType="io.renren.entity.CommentEntity">
+		select createTime from comment 
+	</select>
+
+	<!--通过条件查询所有  -->
+	<select id="findAllByName" resultType="io.renren.entity.CommentEntity">
+		select * from comment  where foodName = #{name}
+	</select>
+	
+	<!--通过博客名字条件查询所有  -->
+	<select id="findAllCommentByBlogName" resultType="io.renren.entity.CommentEntity">
+		select * from comment  where articleName = #{bolgname}
+	</select>
+
+	<select id="queryList" resultType="io.renren.entity.CommentEntity">
+		select * from comment 
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from comment 
+	</select>
+	
+	<select id="queryTotalByName" resultType="int">
+		select count(*) from comment  where customerName = #{customername}
+	</select>
+	 
+	<insert id="save" parameterType="io.renren.entity.CommentEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into comment
+		(
+			`foodName`, 
+			`articleName`, 
+			`customerName`, 
+			`comment`,
+			`createTime`,
+			`customerImg`
+		)
+		values
+		(
+			#{foodname}, 
+			#{articlename}, 
+			#{customername}, 
+			#{comment},
+			#{createTime},
+			#{customerimg}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="io.renren.entity.CommentEntity">
+		update comment 
+		<set>
+			<if test="foodname != null">`foodName` = #{foodname}, </if>
+			<if test="articlename != null">`articleName` = #{articlename}, </if>
+			<if test="customername != null">`customerName` = #{customername}, </if>
+			<if test="comment != null">`comment` = #{comment}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from comment where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from comment where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>
